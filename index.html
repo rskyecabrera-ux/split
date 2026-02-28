@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Split</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f6f3;
+    --surface: #ffffff;
+    --border: #e8e5de;
+    --border-light: #f0ede6;
+    --accent: #1a1a1a;
+    --green: #2d5a27;
+    --green-bg: #edf4eb;
+    --text: #1a1a1a;
+    --muted: #8a8478;
+    --error: #c0392b;
+    --error-bg: #fdf2f1;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: 100vh;
+    padding: 40px 20px 100px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .header { margin-bottom: 36px; }
+  .header-top { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+
+  .peso-badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--green);
+    background: var(--green-bg);
+    padding: 3px 8px;
+    border-radius: 100px;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .section { margin-bottom: 12px; }
+
+  .section-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 7px;
+    padding-left: 2px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+
+  input[type="text"], input[type="number"] {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 10px 13px;
+    outline: none;
+    transition: border-color 0.15s, background 0.15s;
+    -webkit-appearance: none;
+  }
+
+  input:focus { border-color: var(--accent); background: #fff; }
+  input::placeholder { color: var(--muted); font-weight: 400; }
+
+  .charges-row { display: flex; gap: 10px; }
+  .charges-row > * { flex: 1; }
+
+  .field-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+
+  .input-group { position: relative; }
+  .input-group input { padding-right: 28px; }
+  .input-suffix {
+    position: absolute;
+    right: 11px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.78rem;
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  /* People */
+  .people-list { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+
+  .person-chip {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 5px 10px 5px 8px;
+    font-size: 0.78rem;
+    font-weight: 500;
+  }
+
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  .person-chip button {
+    background: none; border: none;
+    color: var(--muted); cursor: pointer;
+    font-size: 1rem; padding: 0; line-height: 1;
+    margin-left: 1px; opacity: 0.45;
+    transition: opacity 0.15s;
+  }
+  .person-chip button:hover { opacity: 1; color: var(--error); }
+
+  .add-person-row { display: flex; gap: 8px; }
+  .add-person-row input { flex: 1; }
+
+  .btn-add-person {
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+  }
+  .btn-add-person:hover { opacity: 0.82; }
+
+  /* Mode tabs */
+  .mode-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+  .mode-tab {
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .mode-tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  /* Items */
+  .item-block {
+    border-bottom: 1px solid var(--border-light);
+    padding: 11px 0;
+  }
+  .item-block:first-child { padding-top: 2px; }
+  .item-block:last-child { border-bottom: none; padding-bottom: 2px; }
+
+  .item-main { display: flex; gap: 8px; align-items: center; }
+  .item-name-input { flex: 1; }
+
+  .item-price-wrap { position: relative; width: 110px; flex-shrink: 0; }
+  .item-price-wrap input { padding-left: 26px; }
+  .peso-prefix {
+    position: absolute;
+    left: 10px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  .item-del {
+    background: none; border: none;
+    color: var(--muted); cursor: pointer;
+    font-size: 1.15rem; line-height: 1;
+    opacity: 0.35; padding: 0 2px;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
+  }
+  .item-del:hover { opacity: 1; color: var(--error); }
+
+  .item-assign {
+    display: flex; flex-wrap: wrap; gap: 5px;
+    margin-top: 8px;
+  }
+
+  .assign-btn {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 4px 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.73rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.12s;
+  }
+  .assign-btn.selected { color: var(--text); background: #fff; }
+
+  .empty-items {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+    padding: 8px 0;
+  }
+
+  .btn-add-item {
+    width: 100%;
+    background: transparent;
+    border: 1.5px dashed var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--muted);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 9px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.15s;
+  }
+  .btn-add-item:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Calculate */
+  .btn-calculate {
+    width: 100%;
+    background: var(--green);
+    border: none;
+    border-radius: var(--radius);
+    color: #fff;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .btn-calculate:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-calculate:active { transform: translateY(0); }
+
+  /* Error */
+  .error-msg {
+    background: var(--error-bg);
+    border: 1px solid #f5c6c3;
+    border-radius: var(--radius-sm);
+    color: var(--error);
+    font-size: 0.8rem;
+    padding: 10px 14px;
+    margin-top: 12px;
+  }
+
+  /* Summary */
+  .summary {
+    margin-top: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .summary-header {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .summary-header-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .summary-total-badge {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  .person-row {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .person-row:last-child { border-bottom: none; }
+
+  .person-row-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 3px;
+  }
+
+  .person-row-name {
+    display: flex; align-items: center; gap: 7px;
+    font-weight: 600;
+    font-size: 0.88rem;
+  }
+
+  .person-row-amount {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--green);
+    letter-spacing: -0.3px;
+  }
+
+  .person-row-detail {
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.75;
+    padding-left: 15px;
+  }
+
+  .summary-totals {
+    padding: 13px 16px;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+  }
+
+  .total-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--muted);
+    padding: 2.5px 0;
+  }
+
+  .total-line.grand {
+    margin-top: 8px;
+    padding-top: 9px;
+    border-top: 1px solid var(--border);
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <h1>Split</h1>
+    <span class="peso-badge">₱ PHP</span>
+  </div>
+  <p class="subtitle">Divide the bill, keep the peace.</p>
+</div>
+
+<div class="section">
+  <div class="section-label">Charges</div>
+  <div class="card">
+    <div class="charges-row">
+      <div>
+        <div class="field-label">VAT</div>
+        <div class="input-group">
+          <input type="number" id="vatPct" value="0" min="0" max="100" step="0.1">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">Service Charge</div>
+        <div class="input-group">
+          <input type="number" id="servicePct" value="0" min="0" max="100" step="0.1">
+          <span class="input-suffix">%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">People</div>
+  <div class="card">
+    <div class="people-list" id="peopleList"></div>
+    <div class="add-person-row">
+      <input type="text" id="newPersonName" placeholder="Name..." maxlength="20">
+      <button class="btn-add-person" onclick="addPerson()">Add</button>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">Split Method</div>
+  <div class="card">
+    <div class="mode-tabs">
+      <button class="mode-tab active" id="tabEqual" onclick="setMode('equal')">Split equally</button>
+      <button class="mode-tab" id="tabCustom" onclick="setMode('custom')">Choose items</button>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">Items</div>
+  <div class="card">
+    <div id="itemsList"></div>
+    <button class="btn-add-item" onclick="addItem()">+ Add item</button>
+  </div>
+</div>
+
+<button class="btn-calculate" onclick="calculate()">Calculate →</button>
+<div id="errorMsg"></div>
+<div id="summary"></div>
+
+<script>
+  const COLORS = ['#2d5a27','#5a2d48','#2d4a5a','#5a4a2d','#4a2d5a','#2d5a4a','#5a2d2d','#2d3a5a'];
+  let people = [], items = [], mode = 'equal', nextId = 0;
+
+  function getColor(i) { return COLORS[i % COLORS.length]; }
+
+  function addPerson() {
+    const inp = document.getElementById('newPersonName');
+    const name = inp.value.trim();
+    if (!name) return;
+    people.push({ id: nextId++, name, color: getColor(people.length) });
+    inp.value = '';
+    renderPeople(); renderItems();
+  }
+
+  document.getElementById('newPersonName').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addPerson();
+  });
+
+  function removePerson(id) {
+    people = people.filter(p => p.id !== id);
+    items.forEach(item => { item.assignees = (item.assignees || []).filter(pid => pid !== id); });
+    renderPeople(); renderItems();
+  }
+
+  function renderPeople() {
+    const list = document.getElementById('peopleList');
+    list.innerHTML = people.map(p => `
+      <div class="person-chip">
+        <div class="dot" style="background:${p.color}"></div>
+        <span>${escHtml(p.name)}</span>
+        <button onclick="removePerson(${p.id})">×</button>
+      </div>`).join('');
+  }
+
+  function addItem() {
+    items.push({ id: nextId++, name: '', price: '', assignees: [] });
+    renderItems();
+    setTimeout(() => {
+      const inputs = document.querySelectorAll('.item-name-field');
+      if (inputs.length) inputs[inputs.length - 1].focus();
+    }, 50);
+  }
+
+  function removeItem(id) {
+    items = items.filter(i => i.id !== id);
+    renderItems();
+  }
+
+  function toggleAssignee(itemId, personId) {
+    const item = items.find(i => i.id === itemId);
+    if (!item) return;
+    if (item.assignees.includes(personId)) {
+      item.assignees = item.assignees.filter(id => id !== personId);
+    } else {
+      item.assignees.push(personId);
+    }
+    renderItems();
+  }
+
+  function syncItemField(id, field, value) {
+    const item = items.find(i => i.id === id);
+    if (item) item[field] = value;
+  }
+
+  function renderItems() {
+    const list = document.getElementById('itemsList');
+    if (items.length === 0) {
+      list.innerHTML = '<div class="empty-items">No items yet</div>'; return;
+    }
+    list.innerHTML = items.map(item => `
+      <div class="item-block">
+        <div class="item-main">
+          <input class="item-name-field item-name-input" type="text" placeholder="Item name..."
+            value="${escHtml(item.name)}" oninput="syncItemField(${item.id},'name',this.value)">
+          <div class="item-price-wrap">
+            <span class="peso-prefix">₱</span>
+            <input type="number" placeholder="0" min="0" step="1"
+              value="${item.price}" oninput="syncItemField(${item.id},'price',this.value)">
+          </div>
+          <button class="item-del" onclick="removeItem(${item.id})">×</button>
+        </div>
+        ${mode === 'custom' ? `
+        <div class="item-assign">
+          ${people.length === 0
+            ? '<span style="font-size:0.72rem;color:var(--muted)">Add people first</span>'
+            : people.map(p => `
+                <button class="assign-btn ${item.assignees.includes(p.id) ? 'selected' : ''}"
+                  onclick="toggleAssignee(${item.id},${p.id})"
+                  style="${item.assignees.includes(p.id) ? `border-color:${p.color}` : ''}">
+                  <div class="dot" style="background:${item.assignees.includes(p.id) ? p.color : '#ccc'}"></div>
+                  ${escHtml(p.name)}
+                </button>`).join('')
+          }
+        </div>` : ''}
+      </div>`).join('');
+  }
+
+  function setMode(m) {
+    mode = m;
+    document.getElementById('tabEqual').classList.toggle('active', m === 'equal');
+    document.getElementById('tabCustom').classList.toggle('active', m === 'custom');
+    renderItems();
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function fmt(val) {
+    return '₱' + val.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function calculate() {
+    const errorDiv = document.getElementById('errorMsg');
+    const summaryDiv = document.getElementById('summary');
+    errorDiv.innerHTML = ''; summaryDiv.innerHTML = '';
+
+    const vatPct = parseFloat(document.getElementById('vatPct').value) || 0;
+    const servicePct = parseFloat(document.getElementById('servicePct').value) || 0;
+
+    if (people.length === 0) { errorDiv.innerHTML = '<div class="error-msg">Please add at least one person.</div>'; return; }
+    if (items.length === 0) { errorDiv.innerHTML = '<div class="error-msg">Please add at least one item.</div>'; return; }
+
+    for (const item of items) {
+      if (!item.name.trim()) { errorDiv.innerHTML = '<div class="error-msg">Give every item a name.</div>'; return; }
+      const p = parseFloat(item.price);
+      if (isNaN(p) || p < 0) { errorDiv.innerHTML = '<div class="error-msg">Every item needs a valid price.</div>'; return; }
+      if (mode === 'custom' && item.assignees.length === 0) {
+        errorDiv.innerHTML = `<div class="error-msg">"${escHtml(item.name)}" isn't assigned to anyone.</div>`; return;
+      }
+    }
+
+    const subtotal = items.reduce((s, i) => s + parseFloat(i.price), 0);
+    const vatAmt = subtotal * vatPct / 100;
+    const serviceAmt = subtotal * servicePct / 100;
+    const total = subtotal + vatAmt + serviceAmt;
+    const multiplier = subtotal > 0 ? total / subtotal : 1;
+
+    const shares = {};
+    people.forEach(p => { shares[p.id] = { subtotal: 0, items: [] }; });
+
+    if (mode === 'equal') {
+      const perPerson = subtotal / people.length;
+      people.forEach(p => {
+        shares[p.id].subtotal = perPerson;
+        shares[p.id].items = [{ name: `${people.length}-way equal split`, amount: perPerson }];
+      });
+    } else {
+      items.forEach(item => {
+        const price = parseFloat(item.price);
+        const perAssignee = price / item.assignees.length;
+        item.assignees.forEach(pid => {
+          shares[pid].subtotal += perAssignee;
+          shares[pid].items.push({ name: item.name, amount: perAssignee });
+        });
+      });
+    }
+
+    let html = `<div class="summary">
+      <div class="summary-header">
+        <span class="summary-header-label">Who pays what</span>
+        <span class="summary-total-badge">${fmt(total)}</span>
+      </div>`;
+
+    people.forEach(person => {
+      const share = shares[person.id];
+      const personTotal = share.subtotal * multiplier;
+      const vatShare = share.subtotal * vatPct / 100;
+      const serviceShare = share.subtotal * servicePct / 100;
+      const itemLines = share.items.map(i => `<div>${escHtml(i.name)} — ${fmt(i.amount)}</div>`).join('');
+      let extraLines = '';
+      if (vatPct > 0) extraLines += `<div>VAT ${vatPct}% — ${fmt(vatShare)}</div>`;
+      if (servicePct > 0) extraLines += `<div>Service charge ${servicePct}% — ${fmt(serviceShare)}</div>`;
+
+      html += `<div class="person-row">
+        <div class="person-row-top">
+          <div class="person-row-name">
+            <div class="dot" style="background:${person.color}"></div>
+            ${escHtml(person.name)}
+          </div>
+          <div class="person-row-amount">${fmt(personTotal)}</div>
+        </div>
+        <div class="person-row-detail">${itemLines}${extraLines}</div>
+      </div>`;
+    });
+
+    html += `<div class="summary-totals">
+        <div class="total-line"><span>Subtotal</span><span>${fmt(subtotal)}</span></div>
+        ${vatPct > 0 ? `<div class="total-line"><span>VAT (${vatPct}%)</span><span>${fmt(vatAmt)}</span></div>` : ''}
+        ${servicePct > 0 ? `<div class="total-line"><span>Service charge (${servicePct}%)</span><span>${fmt(serviceAmt)}</span></div>` : ''}
+        <div class="total-line grand"><span>Total</span><span>${fmt(total)}</span></div>
+      </div></div>`;
+
+    summaryDiv.innerHTML = html;
+    summaryDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Sample data
+  people = [
+    { id: nextId++, name: 'Kai', color: COLORS[0] },
+    { id: nextId++, name: 'Mico', color: COLORS[1] },
+  ];
+  items = [
+    { id: nextId++, name: 'Sinigang', price: '320', assignees: [] },
+    { id: nextId++, name: 'Lechon', price: '450', assignees: [] },
+  ];
+  renderPeople(); renderItems();
+</script>
+</body>
+</html>
